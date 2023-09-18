@@ -28,7 +28,6 @@ class Creature {
     }
 
     get keySort() {
-        console.log("gettin");
         return [
             "name",
             "species",

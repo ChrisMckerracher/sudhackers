@@ -13,7 +13,6 @@
     let title = "Toronto";
 
     $: if (isLoading == false) {
-        console.log("WHAT");
         runStuff()
     }
 
@@ -30,8 +29,6 @@
         await tick();
         const width = 500;
         const height = 500;
-
-        console.log(width);
 
         const zoom = d3.zoom()
             .scaleExtent([1, 8])
@@ -56,8 +53,6 @@
 
 
         var neighbourhoods = topojson.feature(toronto, toronto.objects.toronto);
-
-        console.log(svg);
 
         var projection = d3.geoAlbers();
         projection

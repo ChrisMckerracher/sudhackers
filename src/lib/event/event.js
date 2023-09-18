@@ -6,7 +6,9 @@ class Event {
         MAP_SEARCH: "mapSearch",
         INFO_UPDATE: "infoUpdate",
         INFO_SEARCH: "infoSearch",
-        LOG_UPDATE: "logUpdate"
+        LOG_UPDATE: "logUpdate",
+        HELP: "help",
+        INPUT_ERROR: "inputError"
     }
     constructor(type, fields) {
         this.type = type;

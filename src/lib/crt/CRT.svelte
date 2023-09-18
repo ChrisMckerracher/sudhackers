@@ -35,9 +35,9 @@ onMount(async() => {
     await sleep();
 
     event = new Event(Event.Types.INFO_SEARCH, {
-        "type": "Creature",
+        "type": "creature",
         "name": "",
-        "species": "Wolfman"
+        "species": "werewolf"
     })
     eventStore.set(event);
     await sleep();

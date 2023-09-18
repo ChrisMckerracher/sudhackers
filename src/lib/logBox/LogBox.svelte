@@ -12,20 +12,20 @@
         switch (event.type) {
             case Event.Types.INFO_SEARCH:
                 type = fields.type;
-                if (type == "Creature") {
+                if (type == "creature") {
                     console.log(fields.species);
-                    let searchType = fields.name != "" ? "Name" : "Species"
+                    let searchType = fields.name != "" ? "name" : "species"
                     let searchField = fields.name != "" ? fields.name : fields.species;
-                    lines.push("Searching Creature with " + searchType + ": " + searchField);
+                    lines.push("Searching creature with " + searchType + ": " + searchField);
                 }
                 break
             case Event.Types.INFO_UPDATE:
                 type = fields.type;
                 if (type == "Creature") {
                     console.log(fields);
-                    let searchType = fields.name != "" ? "Name" : "Species"
+                    let searchType = fields.name != "" ? "name" : "species"
                     let searchField = fields.name != "" ? fields.name : fields.species;
-                    lines.push("Loading Creature with " + searchType + ": " + searchField);
+                    lines.push("Loading creature with " + searchType + ": " + searchField);
                 }
                 break;
             case Event.Types.MAP_INITIALIZE:

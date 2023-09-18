@@ -32,7 +32,6 @@
 <style>
 
     .flashing-cursor {
-        margin: 2px;
         border: 2px solid #536157; /* Cursor style (you can adjust the width and color) */
         width: 2px;
         height: 0.8em; /* Adjust the height as needed */
@@ -53,9 +52,8 @@
         width: 10px;
     }
 
-    .text {
-        display: flex;
-        flex-direction: column-reverse;
+    .whatever {
+        height: 24px
     }
 
 </style>

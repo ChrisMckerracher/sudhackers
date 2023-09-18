@@ -4,6 +4,7 @@
     import Creature from "./lib/creature.js";
 
     export let fields;
+    export let displayFields;
 
     function* textGenerator(txt) {
         for (let i = 0; i < txt.length; i++) {
@@ -49,6 +50,7 @@
         text-align: left;
         margin-left: 50px;
         margin-top: 100px;
+        width: 100%;
     }
 
     .field {
@@ -57,11 +59,13 @@
 </style>
 
 <div class="fields">
-    {#each lines as line, index}
-        <div class="field">
-            <TextGenerator text={line} showCursor={index == lines.length - 1}></TextGenerator>
-        </div>
+    {#if displayFields}
+        {#each lines as line, index}
+            <div class="field">
+                <TextGenerator text={line} showCursor={index == lines.length - 1}></TextGenerator>
+            </div>
 
-    {/each}
+        {/each}
+    {/if}
 
 </div>
