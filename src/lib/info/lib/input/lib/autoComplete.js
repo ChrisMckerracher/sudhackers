@@ -17,7 +17,7 @@ class AutoComplete {
 
     static getSearchOptions(keys) {
         if (keys.length == 1) {
-            return ["creature", "location"];
+            return ["creature", "location", "email"];
         } else if (keys.length == 2) {
             let searchCriteria = keys[1];
 

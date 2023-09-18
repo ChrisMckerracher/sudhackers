@@ -1,7 +1,7 @@
 <script>
     import {onMount} from "svelte";
     import TextGenerator from "../../../text/TextGenerator.svelte";
-    import Creature from "./lib/creature.js";
+    import Creature from "../../../entity/creature.js";
 
     export let fields;
     export let displayFields;
@@ -17,10 +17,6 @@
         }
     }
 
-    $: if (fields == fields) {
-        genLines();
-    }
-
     let lines = []
 
     onMount(async () => {
@@ -29,6 +25,7 @@
     )
 
     async function genLines() {
+        console.log(fields);
         let textGen = textGenerator(fields.keys);
 
         let textLine;
@@ -49,7 +46,7 @@
     .fields {
         text-align: left;
         margin-left: 50px;
-        margin-top: 100px;
+        margin-top: 20px;
         width: 100%;
     }
 

@@ -4,6 +4,7 @@
 
     export let text;
     export let showCursor;
+    export let highlight = false;
 
     let viewableText = ""
     let isDone = false;
@@ -53,15 +54,29 @@
     }
 
     .whatever {
-        height: 24px
+        height: 24px;
+        width: fit-content;
     }
+
+    .highlight-value {
+        padding: 5px;
+        padding-left: 2px;
+        background-color: green;
+    }
+
+    .disabled {
+        display: none;
+    }
+
 
 </style>
 
-<div class="whatever">
+<div class="whatever {highlight  ? 'highlight-value' : ''}">
     {viewableText}
 
     {#if showCursor && isDone}
         <span class="flashing-cursor">    </span>
     {/if}
 </div>
+
+<div class="highlight-value disabled"></div>

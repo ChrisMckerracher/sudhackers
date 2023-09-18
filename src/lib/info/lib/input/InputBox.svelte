@@ -57,6 +57,7 @@
     });
 
     function triggerSearch(value) {
+        input = "";
         value = value.trim();
         let inputKeys = value.split(" ");
         console.log(inputKeys.length);
@@ -72,24 +73,40 @@
 
         } else if (inputKeys[0] == "search") {
 
-            if (inputKeys.length != 4) {
-
-                updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                    "type": "search",
-                }));
-                return;
-            }
-
-
             let searchCriteria = inputKeys[1];
             let subSearchCriteria = inputKeys[2];
-            let concreteSearchParameter = inputKeys[3];
+            let concreteSearchParameter;
             let fields = {}
 
             console.log(subSearchCriteria);
 
             switch (searchCriteria) {
+                case "email":
+                    if (inputKeys.length != 3) {
+
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    fields = {
+                        type: "email",
+                        name: subSearchCriteria
+                    }
+                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+                    break;
+
                 case "creature":
+                    if (inputKeys.length != 4) {
+
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    concreteSearchParameter = inputKeys[3];
                     console.log("Hi")
                     fields = {
                         type: "creature",
@@ -99,7 +116,7 @@
                     if (subSearchCriteria == "species") {
                         fields.species = concreteSearchParameter;
                     } else if (subSearchCriteria == "name") {
-                        fields.name == concreteSearchParameter;
+                        fields.name = concreteSearchParameter;
                     } else {
                         updateEvent(new Event(Event.Types.INPUT_ERROR, {
                             "type": "search",
@@ -111,6 +128,15 @@
 
                     break;
                 case "location":
+                    if (inputKeys.length != 4) {
+
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    concreteSearchParameter = inputKeys[3];
 
                     if (["building", "street", "district"].indexOf(subSearchCriteria) == -1 ) {
                         updateEvent(new Event(Event.Types.INPUT_ERROR, {

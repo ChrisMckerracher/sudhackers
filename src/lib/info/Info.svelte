@@ -1,14 +1,22 @@
 <script>
     import TextGenerator from "../text/TextGenerator.svelte";
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import Fields from "./lib/fields/Fields.svelte";
     import {eventStore, initalizeEventStore} from "../event/store.js";
     import Event from "../event/event.js";
     import InputBox from "./lib/input/InputBox.svelte";
+    import List from "./lib/list/List.svelte";
+    import ListItem from "./lib/list/lib/listItem.js";
+    import Email from "../entity/email.js";
+    import SearchEngine from "../searchEngine/searchEngine.js";
 
 
     export let info;
     let displayFields = false;
+
+    let mode = "list"; // = "display"
+
+    const searchEngine = new SearchEngine();
 
     if (info == null || info.title == null) {
         info = {
@@ -17,7 +25,7 @@
         }
     }
 
-    eventStore.subscribe(async event => {
+    const subscribe = eventStore.subscribe(async event => {
         console.log(event);
         let fields = event.fields;
         let type;
@@ -27,14 +35,59 @@
                 info.title = "Loading";
                 info.fields = [];
                 displayFields = false;
+                runSearch(event)
                 break;
             case Event.Types.INFO_UPDATE:
                 info.title = event.fields.type;
                 info.fields = event.fields;
+
+                switch (info.title) {
+                    case "Creature":
+                        mode = "field"
+                        break;
+                    case "Emails":
+                        mode = "list"
+                        break
+                    case "Location":
+                        mode = "field";
+                        break;
+                    default:
+                        mode = "field";
+                }
                 displayFields = true;
                 break;
         }
     });
+
+    let listItems = [ new Email("",
+            "Re: Re: How are you today?",
+            "superboy@gmail.com",
+            "chrismckerracher@github.com",
+            "hi friend, it's been a while. nice catching up!"
+        ),
+        new Email("",
+            "Re: How are you today?",
+            "chrismckerracher@github.com",
+            "superboy@gmail.com",
+            "hi friend, it's been a while. nice catching up!"
+        ),
+        new Email("",
+            " How are you today?",
+            "superboy@gmail.com",
+            "chrismckerracher@github.com",
+            "hi friend, it's been a while. nice catching up!"
+        ),
+    ]
+
+    onDestroy(subscribe);
+
+    async function runSearch(event) {
+        let fields = event.fields;
+        await searchEngine.search(fields);
+
+    }
+
+    listItems.map(x => console.log(JSON.stringify(x)))
 </script>
 
 <style>
@@ -86,10 +139,14 @@
 
 <div id="info-container">
     <div class="title">
-    {info.title}
+        {info.title}
     </div>
 
-    <Fields displayFields={displayFields} fields={info.fields}></Fields>
-    <InputBox></InputBox>
+    {#if mode == "list"}
+        <List items={listItems}></List>
+    {:else}
+        <Fields displayFields={displayFields} fields={info.fields}></Fields>
+        <InputBox></InputBox>
+    {/if}
 
 </div>

@@ -15,8 +15,11 @@
                 if (type == "creature") {
                     console.log(fields.species);
                     let searchType = fields.name != "" ? "name" : "species"
+                    console.log(searchType);
                     let searchField = fields.name != "" ? fields.name : fields.species;
                     lines.push("Searching creature with " + searchType + ": " + searchField);
+                } else if (type == "email") {
+                    lines.push("Searching email with address: " + fields.name);
                 }
                 break
             case Event.Types.INFO_UPDATE:

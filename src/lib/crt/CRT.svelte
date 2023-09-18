@@ -5,7 +5,7 @@ import Map from "../map/Map.svelte";
 import {eventStore} from "../event/store.js";
 import {onMount} from "svelte";
 import Event from "../event/event.js";
-import Creature from "../info/lib/fields/lib/creature.js";
+import Creature from "../entity/creature.js";
 let text = ["Loading",
     "Initializing map: Toronto",
     "Rendering UI",
