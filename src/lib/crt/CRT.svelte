@@ -41,20 +41,6 @@ onMount(async() => {
     })
     eventStore.set(event);
     await sleep();
-
-    event = new Event(Event.Types.INFO_UPDATE, new Creature(
-        "",
-        "Wolfman",
-        "Strong, fur",
-        "Aggressive",
-        "Below Average",
-        "Claws, fangs, runs fast",
-        "Existed since the 1800s"
-
-    ))
-    eventStore.set(event);
-
-
 })
 
 async function sleep() {

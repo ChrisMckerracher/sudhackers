@@ -3,6 +3,7 @@
     import AutoComplete from "./lib/autoComplete.js";
     import {updateEvent} from "../../../event/store.js";
     import Event from "../../../event/event.js";
+    import {onDestroy} from "svelte";
 
     let input = "";
     let inputKeys = [];
@@ -10,10 +11,19 @@
     let autoCompleteFields = [];
     let autoCompleteField = -1
     let keyPressDisabled = false;
-    addEventListener("keydown", (event) => {
+    addEventListener("keydown", handleInput);
+
+    onDestroy(() => {
+        removeEventListener('keydown', handleInput);
+    });
+
+
+    function handleInput(event) {
         if (keyPressDisabled) {
             return;
         }
+        disableKeyPress();
+
         let key = event.key;
 
         if (key == 'Backspace') {
@@ -53,8 +63,7 @@
         }
 
         showSpace = input[input.length - 1] == " " && autoCompleteField == -1;
-        disableKeyPress();
-    });
+    }
 
     function triggerSearch(value) {
         input = "";
@@ -138,7 +147,7 @@
 
                     concreteSearchParameter = inputKeys[3];
 
-                    if (["building", "street", "district"].indexOf(subSearchCriteria) == -1 ) {
+                    if (["building", "street", "district"].indexOf(subSearchCriteria) == -1) {
                         updateEvent(new Event(Event.Types.INPUT_ERROR, {
                             "type": "search",
                         }));

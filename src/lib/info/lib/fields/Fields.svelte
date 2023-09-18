@@ -27,9 +27,11 @@
     async function genLines() {
         console.log(fields);
         let textGen = textGenerator(fields.keys);
+        console.log(fields.keys);
 
         let textLine;
         while ((textLine = textGen.next()).done != true) {
+            console.log(textLine);
             let key = textLine.value
             let value = fields[key];
             lines.push(key + ": " + value);

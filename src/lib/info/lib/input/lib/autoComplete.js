@@ -25,7 +25,7 @@ class AutoComplete {
                 case "creature":
                     return ["species", "name"]
                 case "location":
-                    return ["building", "street", "district"]
+                    return ["building", "intersection", "district"]
             }
         } else if (keys.length == 3) {
             let searchCriteria = keys[1];

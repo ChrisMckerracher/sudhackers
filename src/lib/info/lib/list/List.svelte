@@ -1,7 +1,11 @@
 <script>
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import TextGenerator from "../../../text/TextGenerator.svelte";
     import Fields from "../fields/Fields.svelte";
+
+    import {createEventDispatcher} from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     export let items;
     let displayFields = false;
@@ -9,7 +13,9 @@
     let activeItem = 0;
 
     let keyPressDisabled = false;
-    addEventListener("keydown", (event) => {
+    addEventListener("keydown", handleInput);
+
+    function handleInput(event) {
         disableKeyPress();
         let key = event.key;
         if (displayFields) {
@@ -34,8 +40,14 @@
         } else if (key == "ArrowRight") {
             displayFields = true;
 
+        } else if (key == "ArrowLeft") {
+            dispatch("return", {})
         }
-    });
+    }
+
+    onDestroy(() => {
+        removeEventListener("keydown", handleInput);
+    })
 
     async function disableKeyPress() {
         keyPressDisabled = true;

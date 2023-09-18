@@ -23,8 +23,9 @@
                 }
                 break
             case Event.Types.INFO_UPDATE:
+                console.log(":)");
                 type = fields.type;
-                if (type == "Creature") {
+                if (type == "creature") {
                     console.log(fields);
                     let searchType = fields.name != "" ? "name" : "species"
                     let searchField = fields.name != "" ? fields.name : fields.species;

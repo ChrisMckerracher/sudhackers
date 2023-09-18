@@ -1,26 +1,24 @@
 <script>
-    import TextGenerator from "../text/TextGenerator.svelte";
-    import {onDestroy, onMount} from "svelte";
+    import {onDestroy, tick} from "svelte";
     import Fields from "./lib/fields/Fields.svelte";
-    import {eventStore, initalizeEventStore} from "../event/store.js";
+    import {eventStore} from "../event/store.js";
     import Event from "../event/event.js";
     import InputBox from "./lib/input/InputBox.svelte";
     import List from "./lib/list/List.svelte";
-    import ListItem from "./lib/list/lib/listItem.js";
-    import Email from "../entity/email.js";
     import SearchEngine from "../searchEngine/searchEngine.js";
+    import ErrorEntity from "../entity/error.js";
 
 
     export let info;
     let displayFields = false;
 
-    let mode = "list"; // = "display"
+    let mode = ""; // = "display"
 
     const searchEngine = new SearchEngine();
 
     if (info == null || info.title == null) {
         info = {
-            "title": "Undefined",
+            "title": "Loading",
             "fields": []
         }
     }
@@ -38,46 +36,34 @@
                 runSearch(event)
                 break;
             case Event.Types.INFO_UPDATE:
+                console.log(event.fields);
                 info.title = event.fields.type;
-                info.fields = event.fields;
+                info.title = info.title[0].toUpperCase() + info.title.slice(1, info.title.length)
+                info.fields = event.fields.values;
+                if (info.fields.length == 0) {
+                    info.fields = [new ErrorEntity("no results", "unable to find any results")];
+                    return;
+                }
 
                 switch (info.title) {
-                    case "Creature":
-                        mode = "field"
+                    case "creature":
+                        mode = "display";
+                        await tick();
+                        mode = "list";
                         break;
-                    case "Emails":
+                    case "email":
                         mode = "list"
                         break
-                    case "Location":
-                        mode = "field";
+                    case "location":
+                        mode = "list";
                         break;
                     default:
-                        mode = "field";
+                        mode = "list";
                 }
                 displayFields = true;
                 break;
         }
     });
-
-    let listItems = [ new Email("",
-            "Re: Re: How are you today?",
-            "superboy@gmail.com",
-            "chrismckerracher@github.com",
-            "hi friend, it's been a while. nice catching up!"
-        ),
-        new Email("",
-            "Re: How are you today?",
-            "chrismckerracher@github.com",
-            "superboy@gmail.com",
-            "hi friend, it's been a while. nice catching up!"
-        ),
-        new Email("",
-            " How are you today?",
-            "superboy@gmail.com",
-            "chrismckerracher@github.com",
-            "hi friend, it's been a while. nice catching up!"
-        ),
-    ]
 
     onDestroy(subscribe);
 
@@ -87,7 +73,12 @@
 
     }
 
-    listItems.map(x => console.log(JSON.stringify(x)))
+    function setSearch() {
+        mode = "search";
+        info.title = "Search";
+        info.fields = [];
+    }
+
 </script>
 
 <style>
@@ -142,10 +133,14 @@
         {info.title}
     </div>
 
-    {#if mode == "list"}
-        <List items={listItems}></List>
+    {#if info.fields.length > 1}
+        <List on:return={setSearch} items={info.fields}></List>
+    {:else if info.fields.length == 1}
+        <Fields displayFields={true} fields={info.fields[0]}></Fields>
+        <InputBox></InputBox>
     {:else}
-        <Fields displayFields={displayFields} fields={info.fields}></Fields>
+        <Fields displayFields={true}
+                fields={info.fields}></Fields>
         <InputBox></InputBox>
     {/if}
 

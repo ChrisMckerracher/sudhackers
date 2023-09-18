@@ -9,7 +9,7 @@ class Creature extends Entity {
                 knownAbilities,
                 history,
                 ) {
-        super(name, "Creature");
+        super(name, "creature");
         this.species = species;
         this.physicalTraits = physicalTraits;
         this.behavior = behavior;
@@ -28,6 +28,10 @@ class Creature extends Entity {
             "knownAbilities",
             "history",
         ]
+    }
+
+    get text() {
+        return this.name;
     }
 }
 

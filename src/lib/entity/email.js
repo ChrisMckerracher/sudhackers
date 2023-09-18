@@ -7,7 +7,7 @@ class Email extends Entity {
                 from,
                 body
     ) {
-        super(name, "Email");
+        super(name, "email");
         this.subject = subject;
         this.to = to;
         this.from = from;
