@@ -14,8 +14,7 @@ class DistrictLocation extends Entity {
         return [
             "name",
             "locationType",
-            "history",
-            "hackableItems",
+            "history"
         ]
     }
 }
@@ -24,10 +23,21 @@ class IntersectionLocation extends DistrictLocation {
     constructor(name,
                 locationType,
                 history,
-                district
+                district,
+                hackableItems
     ) {
         super(name, locationType, history);
         this.district = district;
+        this.hackableItems = hackableItems;
+    }
+
+    get keySort() {
+        return [
+            "name",
+            "district",
+            "history",
+            "hackableItems"
+        ]
     }
 
 }
@@ -38,10 +48,21 @@ class BuildingLocation extends IntersectionLocation {
                 history,
                 district,
                 intersection,
+                hackableItems
 
     ) {
-        super(name, locationType, history, district);
+        super(name, locationType, history, district, hackableItems);
         this.intersection = intersection;
+    }
+
+    get keySort() {
+        return [
+            "name",
+            "district",
+            "intersection",
+            "history",
+            "hackableItems"
+        ]
     }
 
 }

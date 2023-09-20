@@ -1,9 +1,12 @@
 <script>
 
-    import {onMount, tick} from "svelte";
+    const dispatch = createEventDispatcher();
+
+
+    import {createEventDispatcher, onMount, tick} from "svelte";
 
     export let text;
-    export let showCursor;
+    export let showCursor = false;
     export let highlight = false;
 
     let viewableText = ""
@@ -26,6 +29,7 @@
 
 
             isDone = true;
+            dispatch("complete", {});
         }
     )
 
@@ -54,7 +58,7 @@
     }
 
     .whatever {
-        height: 24px;
+        height: fit-content;
         width: fit-content;
     }
 
@@ -72,7 +76,7 @@
 </style>
 
 <div class="whatever {highlight  ? 'highlight-value' : ''}">
-    {viewableText}
+    {@html viewableText}
 
     {#if showCursor && isDone}
         <span class="flashing-cursor">    </span>

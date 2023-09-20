@@ -45,26 +45,15 @@
     }
 </script>
 <style>
-    .fields {
-        text-align: left;
-        margin-left: 50px;
-        margin-top: 20px;
-        width: 100%;
-    }
 
-    .field {
-        padding-bottom: 20px;
-    }
 </style>
 
-<div class="fields">
-    {#if displayFields}
-        {#each lines as line, index}
-            <div class="field">
-                <TextGenerator text={line} showCursor={index == lines.length - 1}></TextGenerator>
-            </div>
+{#if displayFields}
+    {#each lines as line, index}
+        <div class="field">
+            <TextGenerator text={line} showCursor={index == lines.length - 1}></TextGenerator>
+        </div>
 
-        {/each}
-    {/if}
+    {/each}
+{/if}
 
-</div>

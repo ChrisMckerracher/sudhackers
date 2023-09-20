@@ -80,7 +80,8 @@
                 "type": "help",
             }));
 
-        } else if (inputKeys[0] == "search") {
+        }
+        else if (inputKeys[0] == "search") {
 
             let searchCriteria = inputKeys[1];
             let subSearchCriteria = inputKeys[2];
@@ -147,7 +148,7 @@
 
                     concreteSearchParameter = inputKeys[3];
 
-                    if (["building", "street", "district"].indexOf(subSearchCriteria) == -1) {
+                    if (["building", "intersection", "district"].indexOf(subSearchCriteria) == -1) {
                         updateEvent(new Event(Event.Types.INPUT_ERROR, {
                             "type": "search",
                         }));
@@ -155,13 +156,31 @@
                     }
 
                     fields = {
+                        type: "location",
                         "locationType": subSearchCriteria,
-                        "location": concreteSearchParameter
+                        "name": concreteSearchParameter
                     }
 
-                    updateEvent(new Event(Event.Types.MAP_INITIALIZE, fields));
+                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
 
             }
+        }
+        else if (inputKeys[0] == "hack") {
+            if (inputKeys.length != 2) {
+
+                updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                    "type": "hack",
+                }));
+                return;
+            }
+
+            let hackableItem = inputKeys[1];
+
+            updateEvent(new Event(Event.Types.HACK_ATTEMPT, {
+                "type": "hack",
+                "name": hackableItem
+            }));
+
         }
 
     }

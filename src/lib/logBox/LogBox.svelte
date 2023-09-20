@@ -25,11 +25,16 @@
             case Event.Types.INFO_UPDATE:
                 console.log(":)");
                 type = fields.type;
-                if (type == "creature") {
-                    console.log(fields);
-                    let searchType = fields.name != "" ? "name" : "species"
-                    let searchField = fields.name != "" ? fields.name : fields.species;
-                    lines.push("Loading creature with " + searchType + ": " + searchField);
+                switch (type) {
+                    case "creature":
+                        let searchType = fields.name != "" ? "name" : "species"
+                        let searchField = fields.name != "" ? fields.name : fields.species;
+                        lines.push("Loading creature with " + searchType + ": " + searchField);
+                        break;
+                    case "email":
+                        lines.push("Loading email with address " + fields.name);
+                        break;
+
                 }
                 break;
             case Event.Types.MAP_INITIALIZE:

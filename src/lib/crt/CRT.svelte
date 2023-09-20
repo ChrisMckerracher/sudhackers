@@ -1,11 +1,10 @@
 <script>
-import Info from "../info/Info.svelte";
+import Terminal from "../terminal/Terminal.svelte";
 import LogBox from "../logBox/LogBox.svelte";
 import Map from "../map/Map.svelte";
 import {eventStore} from "../event/store.js";
 import {onMount} from "svelte";
 import Event from "../event/event.js";
-import Creature from "../entity/creature.js";
 let text = ["Loading",
     "Initializing map: Toronto",
     "Rendering UI",
@@ -33,14 +32,6 @@ onMount(async() => {
     eventStore.set(event);
     isLoading = false;
     await sleep();
-
-    event = new Event(Event.Types.INFO_SEARCH, {
-        "type": "creature",
-        "name": "",
-        "species": "werewolf"
-    })
-    eventStore.set(event);
-    await sleep();
 })
 
 async function sleep() {
@@ -55,7 +46,7 @@ async function sleep() {
 </style>
 
 <div class="crt">
-    <Info></Info>
+    <Terminal></Terminal>
     <LogBox></LogBox>
     <Map isLoading={isLoading}></Map>
 </div>

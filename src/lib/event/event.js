@@ -6,6 +6,8 @@ class Event {
         MAP_SEARCH: "mapSearch",
         INFO_UPDATE: "infoUpdate",
         INFO_SEARCH: "infoSearch",
+        HACK_ATTEMPT: "hackAttempt",
+        HACK_UPDATE: "hackUpdate",
         LOG_UPDATE: "logUpdate",
         HELP: "help",
         INPUT_ERROR: "inputError"

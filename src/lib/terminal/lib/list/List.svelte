@@ -63,39 +63,35 @@
 
 
     let lines = []
-    console.log(items);
+    let isDone = false;
+
+    let textGen = itemGenerator(items);
 
     onMount(async () => {
-            await genLines();
+            genLine();
         }
     )
 
-    async function genLines() {
-        let textGen = itemGenerator(items);
+    function genLine() {
 
-        let textLine;
-        while ((textLine = textGen.next()).done != true) {
+        if (isDone) {
+            return;
+        }
+
+        let textLine = textGen.next()
+
+        if (textLine.done != true) {
             let key = textLine.value
             let value = items[key];
             lines.push(value.text);
             lines = lines;
-            await new Promise(resolve => setTimeout(resolve, 100));
+        } else {
+            isDone = true;
         }
-
     }
+
 </script>
 <style>
-    .fields {
-        text-align: left;
-        margin-left: 50px;
-        margin-top: 100px;
-        width: 100%;
-    }
-
-    .field {
-        display: flex;
-        padding-bottom: 20px;
-    }
 
     .selected-field {
         margin: 0px;
@@ -113,20 +109,18 @@
     }
 </style>
 
-<div class="fields">
-    {#if displayFields}
-        <Fields displayFields={displayFields} fields={items[activeItem]}></Fields>
-    {:else}
-        {#each lines as line, index}
-            <div class="field">
-                <TextGenerator text={line} highlight={index == activeItem}
-                               showCursor={false}></TextGenerator>
-                {#if index == activeItem}
-                    <span class="selected-field"> &nbsp;></span>
-                {/if}
-            </div>
-        {/each}
-    {/if}
+{#if displayFields}
+    <Fields displayFields={displayFields} fields={items[activeItem]}></Fields>
+{:else}
+    {#each lines as line, index}
+        <div class="field">
+            <TextGenerator on:complete={genLine} text={line} highlight={index == activeItem}
+                           showCursor={false}></TextGenerator>
+            {#if index == activeItem}
+                <span class="selected-field"> &nbsp;></span>
+            {/if}
+        </div>
+    {/each}
+{/if}
 
 
-</div>

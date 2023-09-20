@@ -3,19 +3,18 @@ import Event from "../event/event.js";
 import EntityLoader from "../entity/entityLoader.js";
 
 
-class SearchEngine {
+class HackEngine {
 
     constructor() {
         this.isLoading = false;
     }
 
-    async search(fields) {
-        console.log(fields);
-        let value = [];
+    async hack(fields) {
         this.isLoading = true;
+        let value = {}
         // fake delay
-        await new Promise(r => setTimeout(r, 1000));
-        await fetch("http://localhost:8000" + "/search",
+        await new Promise(r => setTimeout(r, 5000));
+        await fetch("http://localhost:8000" + "/hack",
             {
                 method: 'POST',
                 headers: {
@@ -26,19 +25,19 @@ class SearchEngine {
             })
             .then(response => response.json())
             .then(response => {
+                console.log(response);
                 response.values = response.values.map(x => EntityLoader.load(x.type, x));
                 return response;
             }).then(response => {
-                updateEvent(new Event(Event.Types.INFO_UPDATE, response));
+                updateEvent(new Event(Event.Types.HACK_UPDATE, response))
                 value = response;
-            })
+            });
 
-        this.isLoading = false;
-        console.log(this.isLoading);
         return value;
+        this.isLoading = false;
     }
 
 }
 
-export default SearchEngine
+export default HackEngine
 
