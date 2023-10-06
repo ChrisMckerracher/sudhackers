@@ -140,15 +140,12 @@
 
 <style>
     #map-container {
-        position: fixed;
         top: 1px;
         right: 0px;
         width: 500px;
         height: 500px;
-        border: 2px solid green; /* 2px width solid green border */
         margin-right: 1px;
         overflow: hidden;
-        background: radial-gradient(circle at center, rgba(83, 130, 114, 0.1) 100%, transparent 100%);
     }
 
     #radar {
@@ -162,23 +159,16 @@
         animation: radarAnimation 5s ease-in-out infinite;
     }
 
-    .flex-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-    }
-
 </style>
 
-<div id="map-container">
+<div class="ui-element" id="map-container">
 
     {#if !isLoading}
         {title}
         <div id="map"></div>
     {:else}
         Loading
-        <div class="flex-container">
+        <div class="flex-center">
             <TextGenerator text={"Loading"} showCursor={true}></TextGenerator>
         </div>
     {/if}

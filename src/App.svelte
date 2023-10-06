@@ -3,6 +3,7 @@
   import {initalizeEventStore} from "./lib/event/store.js";
 
   initalizeEventStore()
+
 </script>
 
 <style>

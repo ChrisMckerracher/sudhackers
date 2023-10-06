@@ -1,6 +1,6 @@
 <script>
     import {onDestroy} from "svelte";
-    import {eventStore} from "../event/store.js";
+    import {eventStore, updateEvent} from "../event/store.js";
     import Event from "../event/event.js";
     import InputBox from "./lib/input/InputBox.svelte";
     import Hack from "../hackEngine/Hack.svelte";
@@ -49,27 +49,134 @@
         info.title = "Terminal";
     }
 
+    function triggerSearch(event) {
+        let value = event.detail;
+        let inputKeys = value.split(" ");
+        console.log(inputKeys.length);
+
+        if (inputKeys.length == 0) {
+            return;
+        }
+
+        if (inputKeys[0] == "help") {
+            updateEvent(new Event(Event.Types.HELP, {
+                "type": "help",
+            }));
+
+        }
+        else if (inputKeys[0] == "search") {
+
+            let searchCriteria = inputKeys[1];
+            let subSearchCriteria = inputKeys[2];
+            let concreteSearchParameter;
+            let fields = {}
+
+            console.log(subSearchCriteria);
+
+            switch (searchCriteria) {
+                case "email":
+                    if (inputKeys.length != 3) {
+
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    fields = {
+                        type: "email",
+                        name: subSearchCriteria
+                    }
+                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+                    break;
+
+                case "creature":
+                    if (inputKeys.length != 4) {
+
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    concreteSearchParameter = inputKeys[3];
+                    console.log("Hi")
+                    fields = {
+                        type: "creature",
+                        name: "",
+                        species: ""
+                    }
+                    if (subSearchCriteria == "species") {
+                        fields.species = concreteSearchParameter;
+                    } else if (subSearchCriteria == "name") {
+                        fields.name = concreteSearchParameter;
+                    } else {
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+                    console.log(fields);
+                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+
+                    break;
+                case "location":
+                    if (inputKeys.length != 4) {
+
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    concreteSearchParameter = inputKeys[3];
+
+                    if (["building", "intersection", "district"].indexOf(subSearchCriteria) == -1) {
+                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                            "type": "search",
+                        }));
+                        return;
+                    }
+
+                    fields = {
+                        type: "location",
+                        "locationType": subSearchCriteria,
+                        "name": concreteSearchParameter
+                    }
+
+                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+
+            }
+        }
+        else if (inputKeys[0] == "hack") {
+            if (inputKeys.length != 2) {
+
+                updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                    "type": "hack",
+                }));
+                return;
+            }
+
+            let hackableItem = inputKeys[1];
+
+            updateEvent(new Event(Event.Types.HACK_ATTEMPT, {
+                "type": "hack",
+                "name": hackableItem
+            }));
+
+        }
+
+    }
+
+
 </script>
 
 <style>
     #info-container {
-        position: fixed;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         width: calc(100vw - 510px);
         height: 99.4%;
         margin-top: 1px;
         left: 0px;
-        background: radial-gradient(circle at center, rgba(83, 130, 114, 0.1) 100%, transparent 100%);
-        border: 2px solid green; /* 2px width solid green border */
-        text-align: center;
-
-
-    }
-
-    #text-container > div {
-        padding: 10px;
     }
 
     span {
@@ -77,10 +184,7 @@
         width: 10px;
     }
 
-    .title {
-        width: 100%;
 
-    }
 
     .fields {
         text-align: left;
@@ -89,11 +193,9 @@
         width: 100%;
     }
 
-
-
 </style>
 
-<div id="info-container">
+<div class="ui-element flex-col" id="info-container">
     <div class="title">
         {info.title}
     </div>
@@ -110,7 +212,7 @@
     <!-- The extra if is to make it easier to not deal with styling rather than put it above-->
 
     {#if mode == "terminal"}
-        <InputBox></InputBox>
+        <InputBox on:submit={triggerSearch}></InputBox>
     {/if}
 
 </div>
