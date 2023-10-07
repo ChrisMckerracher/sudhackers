@@ -35,23 +35,6 @@
 
 </script>
 <style>
-
-    .flashing-cursor {
-        border: 2px solid #536157; /* Cursor style (you can adjust the width and color) */
-        width: 2px;
-        height: 0.8em; /* Adjust the height as needed */
-        animation: blink 1.2s infinite; /* Blink animation */
-    }
-
-    @keyframes blink {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-        }
-    }
-
     span {
         display: inline-block;
         width: 10px;

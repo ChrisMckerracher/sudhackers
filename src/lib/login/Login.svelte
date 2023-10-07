@@ -29,13 +29,14 @@
     }
 
     #login > .title {
+        line-height: 2;
         transition: line-height 0ms linear;
     }
 
     #username {
         box-sizing: border-box;
         position: absolute;
-        bottom: 0;
+        bottom: 30px;
         display: flex;
         flex-direction: row;
         width: 90%;
@@ -50,16 +51,16 @@
     #username-heading {
         position: absolute;
         left: 0;
-        line-height: 3.5rem;
+        line-height: 2.5rem;
         text-align: start;
         width: 20%;
     }
 
     #username-input {
         position: absolute;
-        left: 20%;
-        width: 80%;
-        min-height: 100%;
+        left: 100px;
+        width: 77%;
+        min-height: 65%;
     }
 
 
