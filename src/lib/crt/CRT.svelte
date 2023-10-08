@@ -55,6 +55,6 @@
         <LogBox></LogBox>
         <Map isLoading={isLoading}></Map>
     {:else}
-        <Login></Login>
+        <Login on:login={() => loggedIn = true}></Login>
     {/if}
 </div>

@@ -21,6 +21,7 @@
 
 
     function handleInput(event) {
+        //ToDo: major refactor of this
         if (keyPressDisabled) {
             return;
         }
@@ -40,7 +41,9 @@
             if (input[input.length - 1] != " ") {
                 input += " "
             }
-            autoCompleteFields = AutoComplete.getOptions(inputKeys);
+            if (enableAutoComplete) {
+                autoCompleteFields = AutoComplete.getOptions(inputKeys);
+            }
             if (autoCompleteFields != null && autoCompleteFields.length > 0) {
                 autoCompleteField = 0;
             }
@@ -75,7 +78,7 @@
 
     async function disableKeyPress() {
         keyPressDisabled = true;
-        await new Promise(r => setTimeout(r, 25));
+        await new Promise(r => setTimeout(r, 5));
         keyPressDisabled = false;
     }
 
