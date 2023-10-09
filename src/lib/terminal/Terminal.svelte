@@ -58,116 +58,121 @@
             return;
         }
 
-        if (inputKeys[0] == "help") {
-            updateEvent(new Event(Event.Types.HELP, {
-                "type": "help",
-            }));
-
-        }
-        else if (inputKeys[0] == "search") {
-
-            let searchCriteria = inputKeys[1];
-            let subSearchCriteria = inputKeys[2];
-            let concreteSearchParameter;
-            let fields = {}
-
-            console.log(subSearchCriteria);
-
-            switch (searchCriteria) {
-                case "email":
-                    if (inputKeys.length != 3) {
-
-                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                            "type": "search",
-                        }));
-                        return;
-                    }
-
-                    fields = {
-                        type: "email",
-                        name: subSearchCriteria
-                    }
-                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
-                    break;
-
-                case "creature":
-                    if (inputKeys.length != 4) {
-
-                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                            "type": "search",
-                        }));
-                        return;
-                    }
-
-                    concreteSearchParameter = inputKeys[3];
-                    console.log("Hi")
-                    fields = {
-                        type: "creature",
-                        name: "",
-                        species: ""
-                    }
-                    if (subSearchCriteria == "species") {
-                        fields.species = concreteSearchParameter;
-                    } else if (subSearchCriteria == "name") {
-                        fields.name = concreteSearchParameter;
-                    } else {
-                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                            "type": "search",
-                        }));
-                        return;
-                    }
-                    console.log(fields);
-                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
-
-                    break;
-                case "location":
-                    if (inputKeys.length != 4) {
-
-                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                            "type": "search",
-                        }));
-                        return;
-                    }
-
-                    concreteSearchParameter = inputKeys[3];
-
-                    if (["building", "intersection", "district"].indexOf(subSearchCriteria) == -1) {
-                        updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                            "type": "search",
-                        }));
-                        return;
-                    }
-
-                    fields = {
-                        type: "location",
-                        "locationType": subSearchCriteria,
-                        "name": concreteSearchParameter
-                    }
-
-                    updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
-
-            }
-        }
-        else if (inputKeys[0] == "hack") {
-            if (inputKeys.length != 2) {
-
-                updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                    "type": "hack",
+        switch (inputKeys[0]) {
+            case "help":
+                updateEvent(new Event(Event.Types.HELP, {
+                    "type": "help",
                 }));
-                return;
-            }
+                break;
+            case "search":
+                handleSearchQuery(inputKeys);
+                break;
+            case "hack":
+                if (inputKeys.length != 2) {
 
-            let hackableItem = inputKeys[1];
+                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                        "type": "hack",
+                    }));
+                    return;
+                }
 
-            updateEvent(new Event(Event.Types.HACK_ATTEMPT, {
-                "type": "hack",
-                "name": hackableItem
-            }));
+                let hackableItem = inputKeys[1];
 
+                updateEvent(new Event(Event.Types.HACK_ATTEMPT, {
+                    "type": "hack",
+                    "name": hackableItem
+                }));
+                break;
+            default:
+                updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                    "type": inputKeys[0],
+                }));
         }
-
     }
 
+    function handleSearchQuery(inputKeys) {
+        //ToDo: make a fields generator class, to pass back here. this is omega ugly
+
+        let searchCriteria = inputKeys[1];
+        let subSearchCriteria = inputKeys[2];
+        let concreteSearchParameter;
+        let fields = {}
+
+        switch (searchCriteria) {
+            case "email":
+                if (inputKeys.length != 3) {
+
+                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                        "type": "search",
+                    }));
+                    return;
+                }
+
+                fields = {
+                    type: "email",
+                    name: subSearchCriteria
+                }
+                updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+                break;
+
+            case "creature":
+                if (inputKeys.length != 4) {
+
+                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                        "type": "search",
+                    }));
+                    return;
+                }
+
+                concreteSearchParameter = inputKeys[3];
+                fields = {
+                    type: "creature",
+                    name: "",
+                    species: ""
+                }
+                if (subSearchCriteria == "species") {
+                    fields.species = concreteSearchParameter;
+                } else if (subSearchCriteria == "name") {
+                    fields.name = concreteSearchParameter;
+                } else {
+                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                        "type": "search",
+                    }));
+                    return;
+                }
+                updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+
+                break;
+            case "location":
+                if (inputKeys.length != 4) {
+
+                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                        "type": "search",
+                    }));
+                    return;
+                }
+
+                concreteSearchParameter = inputKeys[3];
+
+                if (["building", "intersection", "district"].indexOf(subSearchCriteria) == -1) {
+                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
+                        "type": "search",
+                    }));
+                    return;
+                }
+
+                fields = {
+                    type: "location",
+                    "locationType": subSearchCriteria,
+                    "name": concreteSearchParameter
+                }
+
+                updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
+
+        }
+
+
+    }
 
 </script>
 
@@ -183,7 +188,6 @@
         display: inline-block;
         width: 10px;
     }
-
 
 
     .fields {
