@@ -1,6 +1,7 @@
 import {eventStore, updateEvent} from "../event/store.js";
 import Event from "../event/event.js";
 import EntityLoader from "../entity/entityLoader.js";
+import {SERVERURL} from "../util/constants.js";
 
 
 class HackEngine {
@@ -14,9 +15,12 @@ class HackEngine {
         let value = {}
         // fake delay
         await new Promise(r => setTimeout(r, 5000));
-        await fetch("http://localhost:8000" + "/hack",
+        await fetch(SERVERURL + "/hack",
             {
                 method: 'POST',
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "include",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

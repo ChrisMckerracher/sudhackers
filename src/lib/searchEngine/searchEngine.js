@@ -1,6 +1,7 @@
 import {eventStore, updateEvent} from "../event/store.js";
 import Event from "../event/event.js";
 import EntityLoader from "../entity/entityLoader.js";
+import {SERVERURL} from "../util/constants.js";
 
 
 class SearchEngine {
@@ -15,9 +16,12 @@ class SearchEngine {
         this.isLoading = true;
         // fake delay
         await new Promise(r => setTimeout(r, 1000));
-        await fetch("http://localhost:8000" + "/search",
+        await fetch(SERVERURL + "/search",
             {
                 method: 'POST',
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "include",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
