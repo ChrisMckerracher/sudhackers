@@ -1,7 +1,7 @@
 <script>
     import InputBox from "../terminal/lib/input/InputBox.svelte";
     import {sleep} from "../util/util.js";
-    import {SERVERURL} from "../util/constants.js";
+    import {HTTPSERVER} from "../util/constants.js";
     import {createEventDispatcher} from "svelte";
     import TextGenerator from "../text/TextGenerator.svelte";
 
@@ -18,7 +18,7 @@
         state = "Logging in";
         console.log(document.getElementById("login").children[0].style.lineHeight = "150px");
 
-        await fetch(SERVERURL + "/login", {
+        await fetch(HTTPSERVER + "/login", {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",

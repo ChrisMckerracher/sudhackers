@@ -1,7 +1,7 @@
 import {eventStore, updateEvent} from "../event/store.js";
 import Event from "../event/event.js";
 import EntityLoader from "../entity/entityLoader.js";
-import {SERVERURL} from "../util/constants.js";
+import {HTTPSERVER} from "../util/constants.js";
 
 
 class SearchEngine {
@@ -16,7 +16,7 @@ class SearchEngine {
         this.isLoading = true;
         // fake delay
         await new Promise(r => setTimeout(r, 1000));
-        await fetch(SERVERURL + "/search",
+        await fetch(HTTPSERVER + "/search",
             {
                 method: 'POST',
                 mode: "cors",

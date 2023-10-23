@@ -1,5 +1,6 @@
 import Creature from "./creature.js";
 import Email from "./email.js";
+import Hackable from "./hack.js";
 import {IntersectionLocation} from "./location.js";
 
 class EntityLoader {
@@ -18,6 +19,9 @@ class EntityLoader {
                     case "intersection":
                         return Object.assign(new IntersectionLocation(), entity);
                 }
+                break;
+            case "hack":
+                return Object.assign(new Hackable(), entity)
             default:
                 break;
         }

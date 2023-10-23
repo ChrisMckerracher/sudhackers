@@ -7,6 +7,7 @@ class Event {
         INFO_UPDATE: "infoUpdate",
         INFO_SEARCH: "infoSearch",
         HACK_ATTEMPT: "hackAttempt",
+        HACK_SUCCESS: "hackSuccess",
         HACK_UPDATE: "hackUpdate",
         LOG_UPDATE: "logUpdate",
         HELP: "help",

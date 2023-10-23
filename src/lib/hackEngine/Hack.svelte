@@ -1,10 +1,11 @@
 <script>
-    import HackEngine from "./hackEngine.js";
+    import HackEngine from "./lib/hackEngine.js";
     import FakeHack from "./FakeHack.svelte";
-    import {createEventDispatcher, onMount} from "svelte";
-    import {updateEvent} from "../event/store.js";
+    import {createEventDispatcher, onDestroy, onMount} from "svelte";
+    import {eventStore, updateEvent} from "../event/store.js";
     import Event from "../event/event.js";
     import ErrorEntity from "../entity/error.js";
+    import SelectableField from "./lib/list/SelectableField.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -14,18 +15,32 @@
 
     let result = {}
 
-    onMount(async () => {
-        hackObject = hackEngine.hack({
-            "name": "hackItem"
-        });
-        hackEngine = hackEngine;
-        console.log(hackObject);
-        updateEvent(new Event(Event.Types.HACK_UPDATE, hackObject))
+    const subscribe = eventStore.subscribe(async event => {
+        let fields = event.fields;
+        let type;
+        switch (event.type) {
+            case Event.Types.HACK_SUCCESS:
+                hackObject = event.fields;
+                console.log(hackObject);
+                console.log(Object.keys(hackObject))
+                break;
+            default:
+                hackObject = {};
+                break;
+        }
     });
 
-    async function runHack(fields) {
-        // This is kind of insane cuz this only works due to searchEngine.search setting isLoading to true before a tick can happen
-        // so i SHOULDNT do this
+    onMount(async () => {
+        //await attemptHack({
+        //    name: hackItem
+        //})
+        hackEngine = hackEngine;
+        //updateEvent(new Event(Event.Types.HACK_UPDATE, hackObject));
+    });
+
+    onDestroy(subscribe);
+
+    async function attemptHack(fields) {
         hackEngine = hackEngine
         let hackResult = await hackEngine.hack(fields);
         let results = hackResult.values;
@@ -36,7 +51,7 @@
 
         // There shouldn't ever be more than one element but it could hypothetically happen
         // due to admin error.
-        result = results[0];
+        hackObject = results[0];
 
         hackEngine = hackEngine
     }
@@ -61,6 +76,6 @@
     {#if hackEngine.isLoading}
         <FakeHack></FakeHack>
     {:else}
-
+        <SelectableField on:return={setSearch} item={hackObject}></SelectableField>
     {/if}
 </div>

@@ -1,10 +1,12 @@
 <script>
-    import {onDestroy} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import {eventStore, updateEvent} from "../event/store.js";
     import Event from "../event/event.js";
     import InputBox from "./lib/input/InputBox.svelte";
     import Hack from "../hackEngine/Hack.svelte";
     import Search from "../searchEngine/Search.svelte";
+    import {sleep} from "../util/util.js";
+    import entityLoader from "../entity/entityLoader.js";
 
 
     export let info;
@@ -20,10 +22,8 @@
     }
 
     const subscribe = eventStore.subscribe(async event => {
-        console.log(event);
         let fields = event.fields;
         let type;
-        console.log(event.type);
         switch (event.type) {
             case Event.Types.INFO_SEARCH:
                 info.title = "Search";
@@ -42,6 +42,19 @@
         }
     });
 
+    onMount(async () => {
+        mode = "hacking";
+        updateEvent(new Event(Event.Types.HACK_SUCCESS, entityLoader.load("hack",{
+            name: "testName",
+            owning_organization: "government",
+            controlling: true,
+            toggleable: [
+                {name: "toggle1", value: false},
+                {name: "toggle2", value: true}
+            ]
+        })));
+    })
+
     onDestroy(subscribe);
 
     function returnSearch(e) {
@@ -52,7 +65,6 @@
     function triggerSearch(event) {
         let value = event.detail;
         let inputKeys = value.split(" ");
-        console.log(inputKeys.length);
 
         if (inputKeys.length == 0) {
             return;
@@ -207,7 +219,7 @@
     <div class="fields">
 
         {#if mode === "hacking"}
-            <Hack hackItem={info.fields["name"]}></Hack>
+            <Hack on:return={returnSearch} hackItem={info.fields["name"]}></Hack>
         {:else if mode === "search"}
             <Search on:return={returnSearch} fields={info.fields}></Search>
         {/if}
