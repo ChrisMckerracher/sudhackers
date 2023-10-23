@@ -1,19 +1,22 @@
 <script>
+    // THIS WHOLE FUCKING CLASS NEEDS A MAJOR FUCKING REFACTOR
 
     //https://gist.github.com/jasonicarter/639c7f839c9c6e8c02a8eea9ac4bd1b0
     //https://observablehq.com/@d3/zoom-to-bounding-box?intent=fork
     import * as d3 from "d3";
-    import toronto from "./lib/js/toronto_topo.json";
+    import toronto from "./lib/json/toronto_topo.json";
     import * as topojson from "topojson";
     import {onMount, tick} from "svelte";
     import TextGenerator from "../text/TextGenerator.svelte";
+    import {Map as RegionMap, MapRegion} from "./lib/js/MapRegions.js";
+    import {sleep} from "../util/util.js";
 
     export let isLoading;
 
     let title = "Toronto";
 
     $: if (isLoading == false) {
-        runStuff()
+        //runStuff();
     }
 
 
@@ -22,19 +25,29 @@
             return;
         }
 
-        runStuff();
+        await runStuff();
+        flashAndZoom(13);
     })
+
+    let svg;
+    let path;
+    let zoom;
+    let states;
+    const width = 500;
+    const height = 500;
+
+    let map;
 
     async function runStuff() {
         await tick();
-        const width = 500;
-        const height = 500;
 
-        const zoom = d3.zoom()
+
+        zoom = d3.zoom()
             .scaleExtent([1, 8])
             .on("zoom", zoomed);
 
-        const svg = d3.select("#map")
+        //hack so that we don't interact with map at all
+        svg = d3.select("#map")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
@@ -52,14 +65,23 @@
             }))
 
 
-        var neighbourhoods = topojson.feature(toronto, toronto.objects.toronto);
+        let neighbourhoods = topojson.feature(toronto, toronto.objects.toronto);
+        console.log(neighbourhoods);
 
-        var projection = d3.geoAlbers();
+        let mapRegions = new Map();
+        neighbourhoods.features.forEach(neighbourhood =>
+            mapRegions.set(neighbourhood.properties.id, new MapRegion(neighbourhood.properties.id, neighbourhood.properties.name, neighbourhood.geometry))
+        );
+
+        map = new RegionMap(mapRegions);
+        console.log(map);
+
+        let projection = d3.geoAlbers();
         projection
             .scale(1)
             .translate([0, 0]);
 
-        var path = d3.geoPath()
+        path = d3.geoPath()
             .projection(projection);
 
 
@@ -71,10 +93,9 @@
             .scale(s)
             .translate(t);
 
-
         const g = svg.append("g")
 
-        const states = g.append("g")
+        states = g.append("g")
             .attr("fill", "#96B3AE")
             .attr("cursor", "pointer")
             .selectAll("path")
@@ -110,10 +131,9 @@
         function clicked(event, d) {
             title = d.properties.name;
             svg.call(zoom);
-            const [[x0, y0], [x1, y1]] = path.bounds(d);
+            let [[x0, y0], [x1, y1]] = path.bounds(d);
+            console.log(path.bounds(d))
             event.stopPropagation();
-            states.transition().style("fill", null);
-            d3.select(this).transition().style("fill", "#2c3330");
             svg.transition().duration(750).call(
                 zoom.transform,
                 d3.zoomIdentity
@@ -122,6 +142,14 @@
                     .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
                 d3.pointer(event, svg.node())
             );
+
+            let selectedPath = states.filter(function(state) {
+                const [[stateX0, stateY0], [stateX1, stateY1]] = path.bounds(state);
+                return stateX0 === x0 && stateY0 === y0 && stateX1 === x1 && stateY1 === y1;
+            });
+            selectedPath.transition().style("fill", "#2c3330");
+            console.log(map);
+
             svg.on(".zoom", null);
         }
 
@@ -132,7 +160,42 @@
         }
 
         svg.node();
+    }
 
+    function flashAndZoom(mapId) {
+        let mapRegion = map.get(16);
+        let [[x0, y0], [x1, y1]] = path.bounds(mapRegion.paths);
+        console.log(mapRegion);
+        console.log(mapRegion.paths);
+        console.log(path.bounds(mapRegion.paths))
+        svg.transition().duration(750).call(
+            zoom.transform,
+            d3.zoomIdentity
+                .translate(width / 2, height / 2)
+                .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+                .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+            //d3.pointer(event, svg.node())
+        );
+
+        let selectedPath = states.filter(function(state) {
+            const [[stateX0, stateY0], [stateX1, stateY1]] = path.bounds(state);
+            return stateX0 === x0 && stateY0 === y0 && stateX1 === x1 && stateY1 === y1;
+        });
+
+        title = mapRegion.name;
+        blinkRegion(selectedPath);
+    }
+
+    async function blinkRegion(selectedPath) {
+
+
+        while (true) {
+            selectedPath.transition().style("fill", "#2c3330");
+            await sleep(1000);
+            selectedPath.transition().style("fill", null);
+            await sleep(1000);
+
+        }
 
     }
 
