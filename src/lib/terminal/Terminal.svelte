@@ -43,7 +43,7 @@
     });
 
     onMount(async () => {
-        mode = "hacking";
+        /**mode = "hacking";
         updateEvent(new Event(Event.Types.HACK_SUCCESS, entityLoader.load("hack",{
             name: "testName",
             owning_organization: "government",
@@ -53,6 +53,7 @@
                 {name: "toggle2", value: true}
             ]
         })));
+         */
     })
 
     onDestroy(subscribe);

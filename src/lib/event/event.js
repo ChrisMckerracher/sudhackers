@@ -9,6 +9,8 @@ class Event {
         HACK_ATTEMPT: "hackAttempt",
         HACK_SUCCESS: "hackSuccess",
         HACK_UPDATE: "hackUpdate",
+        RP_REQUEST: "rpRequest",
+        RP_RESPONSE: "rpResponse",
         LOG_UPDATE: "logUpdate",
         HELP: "help",
         INPUT_ERROR: "inputError"
