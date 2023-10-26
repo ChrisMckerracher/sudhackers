@@ -16,10 +16,10 @@
         HelpEntity.construct({
             name: "search",
             description: "Search for specific data",
-            location: "search location district {districtName} \n\t" +
-                "search location name {locationName}",
+            location: "search location {\"building\", \"block\", \"intersection\"} {locationName}",
             creature: "search creature name {name}\n\t" +
                 "search creature species {speciesName}",
+            email: "search email {email} \n\t"
         }),
         HelpEntity.construct({
             name: "hack",

@@ -17,6 +17,10 @@ class DistrictLocation extends Entity {
             "history"
         ]
     }
+
+    get text() {
+        return this.name;
+    }
 }
 
 class IntersectionLocation extends DistrictLocation {

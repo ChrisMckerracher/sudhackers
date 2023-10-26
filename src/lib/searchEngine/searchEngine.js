@@ -30,7 +30,7 @@ class SearchEngine {
             })
             .then(response => response.json())
             .then(response => {
-                response.values = response.values.map(x => EntityLoader.load("creature", x));
+                response.values = response.values.map(x => EntityLoader.load(fields.type, x));
                 return response;
             }).then(response => {
                 updateEvent(new Event(Event.Types.INFO_UPDATE, response));

@@ -45,6 +45,10 @@
                 info.title = "Help"
                 mode = "help"
                 break;
+            case Event.INPUT_ERROR:
+                info.title = "Help"
+                mode = "error"
+                break;
         }
     });
 
@@ -176,7 +180,7 @@
 
                 concreteSearchParameter = inputKeys[3];
 
-                if (["building", "intersection", "district"].indexOf(subSearchCriteria) == -1) {
+                if (["building", "block", "intersection"].indexOf(subSearchCriteria) == -1) {
                     updateEvent(new Event(Event.Types.INPUT_ERROR, {
                         "type": "search",
                     }));
