@@ -107,6 +107,7 @@ body {
 .field {
     display: flex;
     padding-bottom: 20px;
+    white-space: pre-wrap;
 }
 
 .title {

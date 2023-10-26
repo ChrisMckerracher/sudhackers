@@ -1,11 +1,9 @@
 import {WSSERVER} from "../util/constants.js";
 import {io} from "socket.io-client";
 
-console.log(WSSERVER)
 class SocketEventEngine {
 
     constructor() {
-        console.log(SocketEventEngine.getSessionToken());
         this.socket = io(WSSERVER,{
             withCredentials: true,
             auth: {
@@ -13,11 +11,6 @@ class SocketEventEngine {
             }
         });
 
-        this.socket.on("rp_response", () => {
-            
-
-            }
-        )
     }
 
     async register(event, callback){

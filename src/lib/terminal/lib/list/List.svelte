@@ -10,6 +10,7 @@
     export let items;
     let displayFields = false;
 
+
     let activeItem = 0;
 
     let keyPressDisabled = false;
@@ -56,7 +57,6 @@
     }
 
     function* itemGenerator(items) {
-        console.log(items);
         for (let i = 0; i < items.length; i++) {
             yield i
         }

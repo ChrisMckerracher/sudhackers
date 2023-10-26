@@ -2,6 +2,7 @@
     import TextGenerator from "../text/TextGenerator.svelte";
     import {onMount} from "svelte";
 
+    //ToDo add white-space: pre-wrap; css so we dont need to do this
     let lines = [
         "struct NetworkMutex(x,y) {",
         "&nbsp;&nbsp;&nbsp;&nbsp;define syntaxHighlight(x,b);",

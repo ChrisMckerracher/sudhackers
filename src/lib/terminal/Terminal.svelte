@@ -8,6 +8,7 @@
     import {sleep} from "../util/util.js";
     import entityLoader from "../entity/entityLoader.js";
     import RpResponse from "../rpEngine/RpResponse.svelte";
+    import Help from "../help/Help.svelte";
 
 
     export let info;
@@ -40,6 +41,10 @@
                 info.fields = event.fields;
                 mode = "hacking";
                 break;
+            case Event.Types.HELP:
+                info.title = "Help"
+                mode = "help"
+                break;
         }
     });
 
@@ -56,7 +61,7 @@
         })));
          */
 
-        mode = "rp"
+        mode = "error"
         info.fields = {what: "ever"};
     })
 
@@ -229,7 +234,10 @@
             <Search on:return={returnSearch} fields={info.fields}></Search>
         {:else if mode == "rp"}
             <RpResponse on:return={returnSearch} fields={info.fields}></RpResponse>
-
+        {:else if mode == "help"}
+            <Help on:return={returnSearch}></Help>
+        {:else if mode == "error"}
+            <Help defaultMessage="Command entered incorrectly" on:return={returnSearch}></Help>
         {/if}
     </div>
 

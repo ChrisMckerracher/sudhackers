@@ -1,12 +1,7 @@
 <script>
-    import {onDestroy, onMount} from "svelte";
+    import {onMount} from "svelte";
     import TextGenerator from "../../../text/TextGenerator.svelte";
-    import {updateEvent} from "../../../event/store.js";
-    import Event from "../../../event/event.js";
-    import {HTTPSERVER} from "../../../util/constants.js";
-    //ToDo: this component is currently hacking in hack toggles. either make a hack fields or refactor this
-    // this read-only component SHOULDNT be modifying thigns and firing events
-    export let item;
+
     export let fields;
     export let displayFields;
     let keyPressDisabled = false;
@@ -32,11 +27,9 @@
     async function genLines() {
         console.log(fields);
         let textGen = textGenerator(fields.keys);
-        console.log(fields.keys);
 
         let textLine;
         while ((textLine = textGen.next()).done != true) {
-            console.log(textLine);
             let key = textLine.value
             let value = fields[key];
             lines.push(key + ": " + value);
