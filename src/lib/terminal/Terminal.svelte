@@ -7,6 +7,7 @@
     import Search from "../searchEngine/Search.svelte";
     import {sleep} from "../util/util.js";
     import entityLoader from "../entity/entityLoader.js";
+    import RpResponse from "../rpEngine/RpResponse.svelte";
 
 
     export let info;
@@ -44,7 +45,7 @@
 
     onMount(async () => {
         /**mode = "hacking";
-        updateEvent(new Event(Event.Types.HACK_SUCCESS, entityLoader.load("hack",{
+         updateEvent(new Event(Event.Types.HACK_SUCCESS, entityLoader.load("hack",{
             name: "testName",
             owning_organization: "government",
             controlling: true,
@@ -54,6 +55,9 @@
             ]
         })));
          */
+
+        mode = "rp"
+        info.fields = {what: "ever"};
     })
 
     onDestroy(subscribe);
@@ -223,6 +227,9 @@
             <Hack on:return={returnSearch} hackItem={info.fields["name"]}></Hack>
         {:else if mode === "search"}
             <Search on:return={returnSearch} fields={info.fields}></Search>
+        {:else if mode == "rp"}
+            <RpResponse on:return={returnSearch} fields={info.fields}></RpResponse>
+
         {/if}
     </div>
 
