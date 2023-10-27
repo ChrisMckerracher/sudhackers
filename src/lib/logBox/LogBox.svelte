@@ -13,9 +13,7 @@
             case Event.Types.INFO_SEARCH:
                 type = fields.type;
                 if (type == "creature") {
-                    console.log(fields.species);
                     let searchType = fields.name != "" ? "name" : "species"
-                    console.log(searchType);
                     let searchField = fields.name != "" ? fields.name : fields.species;
                     lines.push("Searching creature with " + searchType + ": " + searchField);
                 } else if (type == "email") {
@@ -23,7 +21,6 @@
                 }
                 break
             case Event.Types.INFO_UPDATE:
-                console.log(":)");
                 type = fields.type;
                 switch (type) {
                     case "creature":
@@ -38,13 +35,13 @@
                 }
                 break;
             case Event.Types.MAP_INITIALIZE:
-                lines.push("Loading Map for " + fields.locationType + ": " + fields.location);
+                lines.push("Loading Map for " + fields.locationType + ": " + fields.name);
                 break;
             case Event.Types.MAP_UPDATE:
-                lines.push("Loaded Map for " + fields.locationType + ": " + fields.location);
+                lines.push("Loaded Map for " + fields.locationType + ": " + fields.name);
                 break;
             case Event.Types.MAP_SEARCH:
-                lines.push("Searching Map for " + fields.locationType + ": " + fields.location);
+                lines.push("Searching Map for " + fields.locationType + ": " + fields.name);
             case Event.Types.LOG_UPDATE:
                 break;
             default:

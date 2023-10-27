@@ -6,6 +6,7 @@
     import Event from "../event/event.js";
     import ErrorEntity from "../entity/error.js";
     import SelectableField from "./lib/list/SelectableField.svelte";
+    import List from "../terminal/lib/list/List.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -13,39 +14,26 @@
     let hackEngine = new HackEngine();
     let hackObject = {}
 
-    let result = {}
+    let error = false;
+    let errorResult = []
 
-    const subscribe = eventStore.subscribe(async event => {
-        let fields = event.fields;
-        let type;
-        switch (event.type) {
-            case Event.Types.HACK_SUCCESS:
-                hackObject = event.fields;
-                console.log(hackObject);
-                console.log(Object.keys(hackObject))
-                break;
-            default:
-                hackObject = {};
-                break;
-        }
-    });
 
     onMount(async () => {
-        //await attemptHack({
-        //    name: hackItem
-        //})
-        hackEngine = hackEngine;
-        //updateEvent(new Event(Event.Types.HACK_UPDATE, hackObject));
+        await attemptHack({
+            name: hackItem
+        })
     });
 
-    onDestroy(subscribe);
 
     async function attemptHack(fields) {
+        console.log(hackItem)
         hackEngine = hackEngine
-        let hackResult = await hackEngine.hack(fields);
+        let hackResult = await hackEngine.attemptHack(fields);
+        console.log(hackResult);
         let results = hackResult.values;
         if (results.length == 0) {
-            result = [new ErrorEntity("no results", "unable to find any results")];
+            errorResult = [new ErrorEntity("no results", "unable to find any results")];
+            error = true;
             return;
         }
 
@@ -53,10 +41,16 @@
         // due to admin error.
         hackObject = results[0];
 
-        hackEngine = hackEngine
+        hackEngine = hackEngine;
+        updateEvent(new Event(Event.Types.HACK_UPDATE, hackObject));
+    }
+
+    async function updateHack(value) {
+        await hackEngine.hack(value.detail);
     }
 
     function setSearch(event) {
+        console.log('here');
         dispatch("return", event);
     }
 
@@ -76,6 +70,10 @@
     {#if hackEngine.isLoading}
         <FakeHack></FakeHack>
     {:else}
-        <SelectableField on:return={setSearch} item={hackObject}></SelectableField>
+        {#if error}
+            <List on:return={setSearch} items={errorResult}></List>
+        {:else}
+            <SelectableField on:itemUpdate={updateHack} on:return={setSearch} item={hackObject}></SelectableField>
+        {/if}
     {/if}
 </div>

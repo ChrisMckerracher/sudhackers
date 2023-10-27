@@ -10,6 +10,8 @@
     import TextGenerator from "../text/TextGenerator.svelte";
     import {Map as RegionMap, MapRegion} from "./lib/js/MapRegions.js";
     import {sleep} from "../util/util.js";
+    import {eventStore} from "../event/store.js";
+    import Event from "../event/event.js";
 
     export let isLoading;
 
@@ -19,6 +21,23 @@
         //runStuff();
     }
 
+    eventStore.subscribe(async event => {
+        if (isLoading) {
+            return;
+        }
+        let fields = event.fields;
+        let type;
+        console.log(event);
+        switch (event.type) {
+            case Event.Types.MAP_UPDATE:
+                if (fields.locationType == 'City') {
+                    await reset();
+                } else {
+                    flashAndZoom(fields.district);
+                }
+        }
+    })
+
 
     onMount(async () => {
         if (isLoading) {
@@ -26,7 +45,6 @@
         }
 
         await runStuff();
-        flashAndZoom(13);
     })
 
     let svg;
@@ -66,7 +84,6 @@
 
 
         let neighbourhoods = topojson.feature(toronto, toronto.objects.toronto);
-        console.log(neighbourhoods);
 
         let mapRegions = new Map();
         neighbourhoods.features.forEach(neighbourhood =>
@@ -74,7 +91,6 @@
         );
 
         map = new RegionMap(mapRegions);
-        console.log(map);
 
         let projection = d3.geoAlbers();
         projection
@@ -114,25 +130,10 @@
             .attr("d", path(topojson.mesh(toronto, toronto.objects.toronto, (a, b) => a !== b)));
 
 
-        function reset() {
-            title = "Toronto";
-            svg.call(zoom);
-            states.transition().style("fill", null);
-            svg.transition().duration(750).call(
-                zoom.transform,
-                d3.zoomIdentity
-                    .translate(0, 0)
-                    .scale(1),
-                d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
-            );
-            svg.on(".zoom", null);
-        }
-
         function clicked(event, d) {
             title = d.properties.name;
             svg.call(zoom);
             let [[x0, y0], [x1, y1]] = path.bounds(d);
-            console.log(path.bounds(d))
             event.stopPropagation();
             svg.transition().duration(750).call(
                 zoom.transform,
@@ -143,12 +144,11 @@
                 d3.pointer(event, svg.node())
             );
 
-            let selectedPath = states.filter(function(state) {
+            let selectedPath = states.filter(function (state) {
                 const [[stateX0, stateY0], [stateX1, stateY1]] = path.bounds(state);
                 return stateX0 === x0 && stateY0 === y0 && stateX1 === x1 && stateY1 === y1;
             });
             selectedPath.transition().style("fill", "#2c3330");
-            console.log(map);
 
             svg.on(".zoom", null);
         }
@@ -163,11 +163,8 @@
     }
 
     function flashAndZoom(mapId) {
-        let mapRegion = map.get(16);
+        let mapRegion = map.get(mapId);
         let [[x0, y0], [x1, y1]] = path.bounds(mapRegion.paths);
-        console.log(mapRegion);
-        console.log(mapRegion.paths);
-        console.log(path.bounds(mapRegion.paths))
         svg.transition().duration(750).call(
             zoom.transform,
             d3.zoomIdentity
@@ -177,13 +174,26 @@
             //d3.pointer(event, svg.node())
         );
 
-        let selectedPath = states.filter(function(state) {
+        let selectedPath = states.filter(function (state) {
             const [[stateX0, stateY0], [stateX1, stateY1]] = path.bounds(state);
             return stateX0 === x0 && stateY0 === y0 && stateX1 === x1 && stateY1 === y1;
         });
 
         title = mapRegion.name;
         blinkRegion(selectedPath);
+    }
+
+    function reset() {
+        title = "Toronto";
+        states.transition().style("fill", null);
+        svg.transition().duration(750).call(
+            zoom.transform,
+            d3.zoomIdentity
+                .translate(0, 0)
+                .scale(1),
+            d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+        );
+        svg.on(".zoom", null);
     }
 
     async function blinkRegion(selectedPath) {

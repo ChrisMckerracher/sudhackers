@@ -65,7 +65,7 @@
         })));
          */
 
-        mode = "error"
+        mode = "help"
         info.fields = {what: "ever"};
     })
 

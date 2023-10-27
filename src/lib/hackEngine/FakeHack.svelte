@@ -32,7 +32,6 @@
     let isDone = false;
 
     function genLine() {
-        console.log("getting line");
 
         if (isDone) {
             return;
@@ -49,7 +48,6 @@
             isDone = true;
         }
 
-        console.log(printedLines);
     }
 </script>
 

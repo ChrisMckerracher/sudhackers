@@ -11,7 +11,6 @@ class SearchEngine {
     }
 
     async search(fields) {
-        console.log(fields);
         let value = [];
         this.isLoading = true;
         // fake delay
@@ -38,7 +37,6 @@ class SearchEngine {
             })
 
         this.isLoading = false;
-        console.log(this.isLoading);
         return value;
     }
 

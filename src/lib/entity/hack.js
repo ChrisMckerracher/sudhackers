@@ -8,6 +8,7 @@ class Hackable extends Entity {
         this.toggleable = toggleable;
         this.owning_organization = owning_organization;
     }
+
     get keySort() {
         return [
             "name",
@@ -17,12 +18,24 @@ class Hackable extends Entity {
         ]
     }
 
+    /**
+     *
+     * @param index
+     * @returns true if the condition toggled, otherwise false
+     */
     toggle(index) {
+        if (!(index in this.toggleable)) {
+            return false
+        }
         let toggleable = this.toggleable[index]
-        console.log(name);
-        console.log(this.toggleable);
-        console.log(toggleable);
-        toggleable.value = !toggleable.value;
+        if ('value' in toggleable && typeof (toggleable.value) == 'boolean') {
+            console.log(toggleable.value);
+            toggleable.value = !toggleable.value;
+            return true;
+
+        }
+
+        return false;
     }
 
     get text() {

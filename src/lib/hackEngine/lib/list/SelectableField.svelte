@@ -20,31 +20,35 @@
 
     async function handleInput(event) {
         length = Object.keys(item).length + item.toggleable.length - 1;
-        console.log(length);
         await disableKeyPress();
         let key = event.key;
-        if (displayFields) {
-            if (key == "ArrowLeft") {
+        switch (key) {
+
+            case 'ArrowLeft':
                 displayFields = false;
                 dispatch("return", {});
-                return;
-            }
-        }
-        if (key == 'ArrowUp') {
-            activeItem--;
-            if (activeItem < 0) {
-                activeItem = 0;
-            }
+                break;
 
-        } else if (key == "ArrowDown") {
-            activeItem++;
-            if (activeItem >= length) {
-                activeItem = length - 1;
-            }
-        } else if (key == "Enter") {
-            item.toggle(activeItem - 3);
-            await genLines();
-            new Event(Event.Types.HACK_UPDATE, item);
+            case 'ArrowUp':
+                activeItem--;
+                if (activeItem < 0) {
+                    activeItem = 0;
+                }
+                break
+
+            case "ArrowDown":
+                activeItem++;
+                if (activeItem >= length) {
+                    activeItem = length - 1;
+                }
+                break;
+
+            case "Enter":
+                if (item.toggle(activeItem - 3)) {
+                    dispatch("itemUpdate", item);
+                    await genLines();
+                }
+                break;
         }
     }
 
@@ -70,7 +74,6 @@
     }
 
     function* textGenerator(txt) {
-        console.log(txt)
         for (let i = 0; i < txt.length; i++) {
             let field = txt[i];
             if (field === "toggleable") {
@@ -105,7 +108,6 @@
             log.scrollTop = log.scrollHeight;
         }
 
-        console.log(item.toggleable);
 
         item.toggleable.forEach(toggleableItem => {
             lines.push([toggleableItem.name + ": " + generateBox(toggleableItem.value), toggleableItem.value]);
@@ -118,7 +120,6 @@
     }
 
     function generateBox(value) {
-        console.log(value)
         if (typeof (value) === "boolean") {
             return value ? "[x]" : "[ ]"
         }
@@ -126,23 +127,6 @@
     }
 
 </script>
-<style>
-
-    .selected-field {
-        margin: 0px;
-        height: 20px;
-        animation: blink 1.2s infinite; /* Blink animation */
-    }
-
-    @keyframes blink {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0;
-        }
-    }
-</style>
 
 {#each lines as line, index}
     <div class="field">

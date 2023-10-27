@@ -84,7 +84,6 @@
         if (textLine.done != true) {
             let key = textLine.value
             let value = items[key];
-            console.log(value);
             lines.push(value.text);
             lines = lines;
         } else {

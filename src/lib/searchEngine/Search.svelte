@@ -4,6 +4,8 @@
     import ErrorEntity from "../entity/error.js";
     import SearchEngine from "./searchEngine.js";
     import TextGenerator from "../text/TextGenerator.svelte";
+    import {updateEvent} from "../event/store.js";
+    import Event from "../event/event.js";
 
     export let fields;
 
@@ -24,6 +26,11 @@
         if (results.length == 0) {
             results = [new ErrorEntity("no results", "unable to find any results")];
             return;
+        }
+
+        if (searchResult.type == 'location') {
+            //ToDo: Change this to just flash the searched districts but zoom in if its a specific district
+            updateEvent(new Event(Event.Types.MAP_UPDATE, results[0]))
         }
 
         searchEngine = searchEngine

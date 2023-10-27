@@ -14,7 +14,6 @@ class HackEngine {
         this.isLoading = true;
         let value = {}
         // fake delay
-        await new Promise(r => setTimeout(r, 5000));
         await fetch(HTTPSERVER + "/attemptHack",
             {
                 method: 'POST',
@@ -43,6 +42,8 @@ class HackEngine {
     async hack(hackable) {
         this.isLoading = true;
         let value = {}
+        console.log(hackable);
+        console.log(JSON.stringify(hackable))
         await fetch(HTTPSERVER + "/hack",
             {
                 method: 'POST',
@@ -53,11 +54,10 @@ class HackEngine {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(fields)
+                body: JSON.stringify(hackable)
             })            .then(response => response.json())
             .then(response => {
                 console.log(response);
-                response.values = response.values.map(x => EntityLoader.load("hack", x));
                 return response;
             }).then(response => {
                 updateEvent(new Event(Event.Types.HACK_SUCCESS, response))

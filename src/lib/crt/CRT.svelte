@@ -22,6 +22,7 @@
         await sleep();
         let event = new Event(Event.Types.MAP_INITIALIZE, {
             "locationType": "City",
+            "name": "Toronto",
             "location": "Toronto"
         })
 
@@ -30,6 +31,7 @@
 
         event = new Event(Event.Types.MAP_UPDATE, {
             "locationType": "City",
+            "name": "Toronto",
             "location": "Toronto"
         })
 
