@@ -44,6 +44,23 @@
                 lines.push("Searching Map for " + fields.locationType + ": " + fields.name);
             case Event.Types.LOG_UPDATE:
                 break;
+            case Event.Types.HACK_SUCCESS:
+                lines.push("Hack successful for " + fields.name);
+                break;
+            case Event.Types.HACK_UPDATE:
+                lines.push("Updating hackable item for " + fields.name);
+                break;
+            case Event.Types.HACK_ATTEMPT:
+                lines.push("Attempting hack of " + fields.name);
+                break;
+            case Event.Types.RP_REQUEST:
+                lines.push("Making specific roleplay request");
+                break;
+            case Event.Types.RP_RESPONSE:
+                lines.push("Received roleplay response ");
+                break;
+
+
             default:
 
                 break;

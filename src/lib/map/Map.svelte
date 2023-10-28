@@ -21,22 +21,7 @@
         //runStuff();
     }
 
-    eventStore.subscribe(async event => {
-        if (isLoading) {
-            return;
-        }
-        let fields = event.fields;
-        let type;
-        console.log(event);
-        switch (event.type) {
-            case Event.Types.MAP_UPDATE:
-                if (fields.locationType == 'City') {
-                    await reset();
-                } else {
-                    flashAndZoom(fields.district);
-                }
-        }
-    })
+
 
 
     onMount(async () => {
@@ -45,6 +30,22 @@
         }
 
         await runStuff();
+        eventStore.subscribe(async event => {
+            if (isLoading) {
+                return;
+            }
+            let fields = event.fields;
+            let type;
+            console.log(event);
+            switch (event.type) {
+                case Event.Types.MAP_UPDATE:
+                    if (fields.locationType == 'City') {
+                        await reset();
+                    } else {
+                        flashAndZoom(fields.district);
+                    }
+            }
+        })
     })
 
     let svg;

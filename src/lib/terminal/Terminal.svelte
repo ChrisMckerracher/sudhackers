@@ -45,7 +45,12 @@
                 info.title = "Help"
                 mode = "help"
                 break;
-            case Event.INPUT_ERROR:
+            case Event.Types.RP_REQUEST:
+                info.title = "M0oPj4PEvp3c+PfytlEcNIZLS6wm"
+                info.fields = event.fields;
+                mode = "rp"
+                break;
+            case Event.Types.INPUT_ERROR:
                 info.title = "Help"
                 mode = "error"
                 break;
@@ -96,9 +101,7 @@
             case "hack":
                 if (inputKeys.length != 2) {
 
-                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                        "type": "hack",
-                    }));
+                    handleInputError("hack");
                     return;
                 }
 
@@ -109,12 +112,31 @@
                     "name": hackableItem
                 }));
                 break;
+            case "rp":
+                if (inputKeys.length < 2) {
+                    handleInputError("rp");
+                    return;
+                }
+                updateEvent(new Event(Event.Types.RP_REQUEST, {
+                    "type": "rp",
+                    "text": inputKeys.slice(1).join(" ")
+                }))
+                break;
             default:
-                updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                    "type": inputKeys[0],
-                }));
+                handleInputError(inputKeys[0]);
         }
     }
+
+    function handleInputError(type) {
+        updateEvent(new Event(Event.Types.INPUT_ERROR, {
+            "type": type,
+        }));
+    }
+
+    function handleRpQuery(inputKeys) {
+
+    }
+
 
     function handleSearchQuery(inputKeys) {
         //ToDo: make a fields generator class, to pass back here. this is omega ugly
@@ -128,9 +150,8 @@
             case "email":
                 if (inputKeys.length != 3) {
 
-                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                        "type": "search",
-                    }));
+                    handleInputError("search");
+
                     return;
                 }
 
@@ -144,9 +165,8 @@
             case "creature":
                 if (inputKeys.length != 4) {
 
-                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                        "type": "search",
-                    }));
+                    handleInputError("search");
+
                     return;
                 }
 
@@ -161,9 +181,7 @@
                 } else if (subSearchCriteria == "name") {
                     fields.name = concreteSearchParameter;
                 } else {
-                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                        "type": "search",
-                    }));
+                    handleInputError("search");
                     return;
                 }
                 updateEvent(new Event(Event.Types.INFO_SEARCH, fields));
@@ -172,18 +190,14 @@
             case "location":
                 if (inputKeys.length != 4) {
 
-                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                        "type": "search",
-                    }));
+                    handleInputError("search");
                     return;
                 }
 
                 concreteSearchParameter = inputKeys[3];
 
                 if (["building", "block", "intersection"].indexOf(subSearchCriteria) == -1) {
-                    updateEvent(new Event(Event.Types.INPUT_ERROR, {
-                        "type": "search",
-                    }));
+                    handleInputError("search");
                     return;
                 }
 

@@ -32,7 +32,9 @@ class HackEngine {
                 response.values = response.values.map(x => EntityLoader.load("hack", x));
                 return response;
             }).then(response => {
-                updateEvent(new Event(Event.Types.HACK_SUCCESS, response))
+                if (response.values.length > 0) {
+                    updateEvent(new Event(Event.Types.HACK_SUCCESS, response));
+                }
                 value = response;
             });
         this.isLoading = false;
@@ -55,7 +57,7 @@ class HackEngine {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(hackable)
-            })            .then(response => response.json())
+            }).then(response => response.json())
             .then(response => {
                 console.log(response);
                 return response;

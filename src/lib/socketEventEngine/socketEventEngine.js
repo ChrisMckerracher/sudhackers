@@ -21,12 +21,15 @@ class SocketEventEngine {
 
     async request(outEvent, body) {
         this.socket.emit(outEvent, body);
-
     }
 
     async deregister(event) {
         // By current design we will only register one event
         this.socket.off(event);
+    }
+
+    async disconnect() {
+        this.socket.disconnect();
     }
 
     static getSessionToken() {
